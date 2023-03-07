@@ -142,6 +142,7 @@ add_library(rs232 src/asr_its/rs232.c)
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(controller_node src/controller.cc)
 add_executable(comhardware_node src/comhardware.cpp)
+add_executable(tf_broadcaster_node src/broadcaster.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -159,6 +160,7 @@ add_executable(comhardware_node src/comhardware.cpp)
 # )
 target_link_libraries(controller_node joystick ${catkin_LIBRARIES})
 target_link_libraries(comhardware_node rs232 ${catkin_LIBRARIES})
+target_link_libraries(tf_broadcaster_node ${catkin_LIBRARIES})
 
 #############
 ## Install ##
