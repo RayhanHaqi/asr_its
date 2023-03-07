@@ -109,12 +109,11 @@ int main(int argc, char **argv)
     printf("Port Open\n");
   }
 
-  subButton = nh.subscribe("controller/button", 16, CallbackButton);
-  subAxis = nh.subscribe("controller/axis", 6, CallbackAxis);
+  // subButton = nh.subscribe("controller/button", 16, CallbackButton);
+  // subAxis = nh.subscribe("controller/axis", 6, CallbackAxis);
 
   odom_pub = nh.advertise<nav_msgs::Odometry>("odom", 50);
   
-
 
   Thread_SerialTransmit = nh.createTimer(ros::Duration(0.1), SerialTransmitEvent);
   Thread_SerialReceived = nh.createTimer(ros::Duration(0.01), SerialReceiveEvent);
@@ -202,9 +201,17 @@ void SerialReceiveEvent(const ros::TimerEvent &event)
       // positionFiltered[0] = buffPosXFilter[2];
       // positionFiltered[1] = buffPosYFilter[2];
       // positionFiltered[2] = buffPosZFilter[2];
-      positionFiltered[0] = 0.7137*buffPosXFilter[2] - 0.7887;
-      positionFiltered[1] = 0.6983*buffPosYFilter[2] + 0.5634;
-      positionFiltered[2] = 1.004*buffPosZFilter[2] + 0.06361;
+
+      // Regresi Orde 1
+      // positionFiltered[0] = 0.7137*buffPosXFilter[2] - 0.7887;
+      // positionFiltered[1] = 0.6983*buffPosYFilter[2] + 0.5634;
+      // positionFiltered[2] = 1.004*buffPosZFilter[2] + 0.06361;
+
+      // Regresi Orde 2
+      positionFiltered[0] = -0.1287+0.6901*buffPosXFilter[2]+0.0001*pow(buffPosXFilter[2], 2) ;
+      positionFiltered[1] = -0.1006+0.7213*buffPosYFilter[2]-0.0001*pow(buffPosYFilter[2], 2) ;
+      positionFiltered[2] = -0.1401+1.0043*buffPosZFilter[2]+0.0*pow(buffPosZFilter[2], 2) ;
+
       // printf("%0.3f,%0.3f,%0.3f\n",posisiOdom[0],posisiOdom[1],posisiOdom[2]);
       // printf("%0.3f,%0.3f,%0.3f#%d\n",positionFiltered[0],positionFiltered[1],positionFiltered[2],status_control);
 
@@ -230,10 +237,6 @@ void SerialReceiveEvent(const ros::TimerEvent &event)
       printf ("status control = %d \n",status_control);
     
 
-
-
-
-
       ros::Time current_time = ros::Time::now();
       // tf::TransformBroadcaster odom_broadcaster;
 
@@ -243,19 +246,19 @@ void SerialReceiveEvent(const ros::TimerEvent &event)
       geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(positionFiltered[2] * 3.14 / 180);
 
       //first . we 'll publish the transform over tf
-      geometry_msgs::TransformStamped odom_trans;
-      odom_trans.header.stamp = current_time;
-      odom_trans.header.frame_id = "odom";
-      odom_trans.child_frame_id = "base_link";
+      // geometry_msgs::TransformStamped odom_trans;
+      // odom_trans.header.stamp = current_time;
+      // odom_trans.header.frame_id = "odom";
+      // odom_trans.child_frame_id = "base_link";
 
-      odom_trans.transform.translation.x = positionFiltered[0];
-      odom_trans.transform.translation.y = positionFiltered[1];
-      odom_trans.transform.translation.z = 0.0;
-      odom_trans.transform.rotation = odom_quat;
+      // odom_trans.transform.translation.x = positionFiltered[0];
+      // odom_trans.transform.translation.y = positionFiltered[1];
+      // odom_trans.transform.translation.z = 0.0;
+      // odom_trans.transform.rotation = odom_quat;
 
-      tf::TransformBroadcaster odom_broadcaster;
-      //send the transform
-      odom_broadcaster.sendTransform(odom_trans);
+      // tf::TransformBroadcaster odom_broadcaster;
+      // //send the transform
+      // odom_broadcaster.sendTransform(odom_trans);
 
       nav_msgs::Odometry odom;
 
@@ -282,12 +285,6 @@ void SerialReceiveEvent(const ros::TimerEvent &event)
       // printf("%0.3f,%0.3f,%0.3f || %0.3f,%0.3f,%0.3f\n",VelocityFilter[0],VelocityFilter[1],VelocityFilter[2],positionFiltered[0],positionFiltered[1],positionFiltered[2]);
 
 
-
-
-
-      
-
-
     }
 
     memset(buf, 0, 4095);
@@ -296,11 +293,9 @@ void SerialReceiveEvent(const ros::TimerEvent &event)
 
 void CallbackButton(const std_msgs::Int32 &msg_btn)
 {
-
   stik_Button = msg_btn;
 
-  for (int i = 0; i < 12; i++)
-  {
+  for (int i = 0; i < 12; i++){
     myControler.button[i] = (stik_Button.data >> i) & 1;
   }
 }

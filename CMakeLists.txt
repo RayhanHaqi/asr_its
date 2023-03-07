@@ -140,8 +140,10 @@ add_library(rs232 src/asr_its/rs232.c)
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
+add_executable(main_node src/main.cpp)
 add_executable(controller_node src/controller.cc)
 add_executable(comhardware_node src/comhardware.cpp)
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -157,6 +159,7 @@ add_executable(comhardware_node src/comhardware.cpp)
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+target_link_libraries(main_node ${catkin_LIBRARIES})
 target_link_libraries(controller_node joystick ${catkin_LIBRARIES})
 target_link_libraries(comhardware_node rs232 ${catkin_LIBRARIES})
 
