@@ -28,7 +28,7 @@ private:
     int     Cport_nr;
     int     Bdrate;
     int     IdxBuff;
-    int     RobotSpeed[3];
+    int     RobotSpeed[3] = {0, 0, 0};
     int     StatusControl;
     float   BuffVelocity_X[100];
     float   BuffVelocity_Y[100];
@@ -41,21 +41,22 @@ private:
     float   PositionFiltered[3];
     char    BitLamp;
     
-    struct Stik_T {uint8_t button[17]; int axis[4]; uint8_t prev_button[17];};
-    enum eStikButton {segitiga, bulat, eks, r1, l2};
+    struct Stik_T {uint8_t button[17]; int axis[4] = {0, 0, 0, 0}; uint8_t prev_button[17];};
+    enum eStikButton {segitiga = 0, bulat = 1, eks = 2, r1 = 5, l2 = 6};
     unsigned char Buf[4096];
 
     Stik_T MyController;
-    
-    ros::Rate   RosRate;
-    ros::Timer  ThreadSerialTransmit;
-    ros::Timer  ThreadSerialReceived;
 
     ros::NodeHandle     Nh;
     ros::Subscriber     SubButton;
     ros::Subscriber     SubAxis;
     ros::Publisher      PubSpeed;
     std_msgs::Int32     StikButton;
+    
+    ros::Rate   RosRate;
+    ros::Timer  ThreadSerialTransmit;
+    ros::Timer  ThreadSerialReceived;
+
 
     std_msgs::Int16MultiArray   StikAxis;
     // std_msgs::Int16MultiArray   MsgSpeed;
@@ -63,9 +64,5 @@ private:
 
     void CallbackButton (const std_msgs::Int32 &MsgBtn);
     void CallbackAxis   (const std_msgs::Int16MultiArray &MsgAxis);
-
-
-    
-    
 
 };

@@ -3,9 +3,10 @@
 
 Robot::Robot(): RosRate(10)
 {
+    ROS_INFO("Debug");
     SubButton   = Nh.subscribe("controller/button", 16, &Robot::CallbackButton, this);
     SubAxis     = Nh.subscribe("controller/axis", 6, &Robot::CallbackAxis, this);
-    PubSpeed    = Nh.advertise<std_msgs::Int16MultiArray>("robot/cmd_vel", 10);
+    PubSpeed    = Nh.advertise<asr_its::ControllerData>("robot/cmd_vel", 10);
 
     for (int i = 0; i <=2 ; i++){
         MsgSpeed.data.push_back(0);
@@ -68,6 +69,8 @@ Robot::Robot(): RosRate(10)
         RosRate.sleep();
     }
 };
+
+Robot::~Robot(){}
 
 void Robot::CallbackButton(const std_msgs::Int32 &MsgBtn)
 {

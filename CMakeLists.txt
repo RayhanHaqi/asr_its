@@ -146,6 +146,7 @@ add_executable(main_node src/main.cpp)
 add_executable(controller_node src/controller.cc)
 add_executable(comhardware_node src/comhardware.cpp)
 add_executable(tf_broadcaster_node src/broadcaster.cpp)
+add_executable(robot_node src/robot_main.cpp)
 
 
 ## Rename C++ executable without prefix
@@ -166,6 +167,7 @@ target_link_libraries(main_node ${catkin_LIBRARIES})
 target_link_libraries(controller_node joystick ${catkin_LIBRARIES})
 target_link_libraries(comhardware_node rs232 ${catkin_LIBRARIES})
 target_link_libraries(tf_broadcaster_node ${catkin_LIBRARIES})
+target_link_libraries(robot_node robot ${catkin_LIBRARIES})
 
 #############
 ## Install ##
