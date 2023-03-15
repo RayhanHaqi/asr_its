@@ -4,20 +4,22 @@
 #include <geometry_msgs/TransformStamped.h>
 
 geometry_msgs::TransformStamped odom_trans;
-tf::TransformBroadcaster        odom_broadcaster;
 
 void callback(const nav_msgs::Odometry::ConstPtr& msg)
 {
-    odom_trans.header.frame_id = "odom";
-    odom_trans.header.stamp = ros::Time::now();
-    odom_trans.child_frame_id = "base_link";
+    static tf::TransformBroadcaster br;
+    tf::Transform transform;
+    tf::Quaternion q;
 
-    odom_trans.transform.translation.x = msg->pose.pose.position.x;
-    odom_trans.transform.translation.y = msg->pose.pose.position.y;
-    odom_trans.transform.translation.z = msg->pose.pose.position.z;
-    odom_trans.transform.rotation = msg->pose.pose.orientation;
+    transform.setOrigin(tf::Vector3(msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z));
+    q.setW(msg->pose.pose.orientation.w);
+    q.setX(msg->pose.pose.orientation.x);
+    q.setY(msg->pose.pose.orientation.y);
+    q.setZ(msg->pose.pose.orientation.z);
+    transform.setRotation(q);
+    
+    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom", "base_link"));
 
-    odom_broadcaster.sendTransform(odom_trans);
 }
 
 int main(int argc, char** argv)
@@ -25,8 +27,9 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "odom_base_link_broadcaster");
     ros::NodeHandle nh;
     ros::Subscriber sub = nh.subscribe("/odom", 10, &callback);
-
+    
     ros::spin();
+
     return 0;
 };
 
