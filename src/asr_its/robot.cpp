@@ -22,14 +22,14 @@ Robot::Robot(): RosRate(10)
 
         if (MyController.button[l2])
         {
-            RobotSpeed[0] = MyController.axis[0] / 800;
-            RobotSpeed[1] = -1 * MyController.axis[1] / 800;
+            RobotSpeed[0] = MyController.axis[0] / 1600;
+            RobotSpeed[1] = -1 * MyController.axis[1] / 1600;
             RobotSpeed[2] = MyController.axis[3] / 1700;
         }
         else
         {
-            RobotSpeed[0] = MyController.axis[0] / 500;
-            RobotSpeed[1] = -1 * MyController.axis[1] / 500;
+            RobotSpeed[0] = MyController.axis[0] / 1000;
+            RobotSpeed[1] = -1 * MyController.axis[1] / 1000;
             RobotSpeed[2] = MyController.axis[3] / 1300;
         }
 
@@ -40,21 +40,21 @@ Robot::Robot(): RosRate(10)
 
         MyController.prev_button[segitiga] = MyController.button[segitiga];
 
-        if (MyController.button[bulat] == 0 && MyController.prev_button[bulat] != 0)
-        {
-            OffsetPos[0] = PosisiOdom[0] + OffsetPos[0];
-            OffsetPos[1] = PosisiOdom[1] + OffsetPos[1];
-            OffsetPos[2] = PosisiOdom[2] + OffsetPos[2];
-        }
+        // if (MyController.button[bulat] == 0 && MyController.prev_button[bulat] != 0)
+        // {
+        //     OffsetPos[0] = PosisiOdom[0] + OffsetPos[0];
+        //     OffsetPos[1] = PosisiOdom[1] + OffsetPos[1];
+        //     OffsetPos[2] = PosisiOdom[2] + OffsetPos[2];
+        // }
 
-        MyController.prev_button[bulat] = MyController.button[bulat];
+        // MyController.prev_button[bulat] = MyController.button[bulat];
 
-        if (MyController.button[eks] == 0)
-        {
-            OffsetPos[0] = 0;
-            OffsetPos[1] = 0;
-            OffsetPos[2] = 0;
-        }
+        // if (MyController.button[eks] == 0)
+        // {
+        //     OffsetPos[0] = 0;
+        //     OffsetPos[1] = 0;
+        //     OffsetPos[2] = 0;
+        // }
 
         std::cout << "RobotSpeed[0] : " << RobotSpeed[0] << " RobotSpeed[1] : " << RobotSpeed[1] << " RobotSpeed[2] : " << RobotSpeed[2] << std::endl;
 
@@ -89,4 +89,7 @@ void Robot::CallbackAxis(const std_msgs::Int16MultiArray &MsgAxis)
     MyController.axis[1] = MsgAxis.data.at(1);
     MyController.axis[2] = MsgAxis.data.at(2);
     MyController.axis[3] = MsgAxis.data.at(3);
+}
+
+void Robot::OdomCallback(const nav_msgs::OdometryConstPtr &msg){
 }
