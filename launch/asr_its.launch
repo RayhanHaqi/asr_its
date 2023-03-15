@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- <node pkg="asr_its" type="main_node" name="main_node" /> -->
+    <node pkg="asr_its" type="robot_node" name="robot_node" />
+    <!-- <node pkg="asr_its" type="robot_node" name="robot_node">
+        <remap from="/robot/cmd_vel" to="/robot/cmd_vel_2"/>
+    </node> -->
+
+    <node pkg="asr_its" type="controller_node" name="controller_node" />
+    <node pkg="asr_its" type="tf_broadcaster_node" name="tf_broadcaster_node" />
+    <node pkg="asr_its" type="robot_comhardware_node" name="comhardware_node" output="screen" />
+</launch>
